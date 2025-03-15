@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Include Quill Styles -->
+        <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+           #editor-container {
+            height: 200px;
+            border: 1px solid #ccc;
+        }
+        body {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .form-container {
+            width: 50%;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 8px;
+        }
+        .preview-container {
+            width: 40%;
+            position: sticky;
+            top: 20px;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-radius: 8px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .product-image {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+        /* .price {
+            font-size: 18px;
+            margin-top: 10px;
+        } */
+        .price {
+            font-size: 16px;
+            margin-top: 10px;
+            display: flex;
+            /* justify-content: space-between; */
+            width: 100%;
+        }
+        .price span {
+            margin-right: 10px;
+        }
+        .text-muted {
+            text-decoration: line-through;
+            color: gray;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .checkbox-group input {
+            width: auto;
+            cursor: pointer;
+        }
+        .hidden-field {
+            display: none;
+        }
+        .preview-description {
+            font-size: 14px;
+            color: #333;
+            background: white;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: justify;
+            width: 100%;
+        }
+        
+        /* .next-button-container { 
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px; 
+            gap: 15px;
+        } */
+        .next-button-container { 
+    display: flex;
+    justify-content: flex-end; /* Aligns buttons to the right */
+    margin-top: 20px; 
+    gap: 15px; /* Space between buttons */
+}
+
+.next-button-container a {
+    text-decoration: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: 0.3s ease;
+}
+
+.btn-secondary {
+    background-color: #6c757d; /* Gray secondary button */
+    color: white;
+    border: none;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268; /* Darker gray on hover */
+}
+
+.btn-primary {
+    background-color: #007bff; /* Blue primary button */
+    color: white;
+    border: none;
+}
+.btn-primary:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+.large-preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+ 
+
+        .image-preview-container img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    margin-right: 5px;
+}
+
+
+.preview-container img {
+    width: 150px; /* Adjust width */
+    height: 150px; /* Adjust height */
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+.heading{
+    font-weight: bold;
+}
+
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h2 class="heading">Let's add your first product</h2>
+        <br/>
+        <h3>Basic Details</h3>
+        <br/>
+        <div class="form-group">
+            <label>Product Name</label>
+            <input type="text" id="productName" oninput="updatePreview()">
+        </div>
+
+        <div class="form-group">
+            <label>Product Description</label>
+            <div id="editor-container"></div>
+            <!-- <textarea id="productDesc" oninput="updatePreview()"></textarea> -->
+        </div>
+
+        <div class="form-group">
+            <label>Add Image</label>
+            <input type="file" id="productImage" accept="image/*" multiple onchange="previewImages(event)">
+        </div>
+        <div id="imagePreviewContainer" class="image-preview-container"></div>
+        <div class="checkbox-group">
+            <input type="checkbox" id="hasSKU" onchange="toggleSKU()"> 
+            <label for="hasSKU">this product has an SKU code</label>
+        </div>
+        <div class="form-group hidden-field" id="skuField">
+            <label>SKU Code</label>
+            <input type="text" id="skuCode" placeholder="e.g., PRD0001">
+        </div>
+
+        <div class="checkbox-group">
+            <input type="checkbox" id="hasHSN" onchange="toggleHSN()"> 
+            <label for="hasHSN">this product has an HSN/SAC code</label>
+        </div>
+        <div class="form-group hidden-field" id="hsnField">
+            <label>HSN/SAC Code</label>
+            <input type="text" id="hsnCode" placeholder="e.g., 1234">
+        </div>
+        <hr>
+
+        <h3>Pricing Details</h3>
+        <br/>
+        <div class=" checkbox-group">
+            <input type="checkbox" id="gstIncluded" onchange="calculateNetPrice()"> <label for="gstIncluded">Price inclusive of GST</label>
+        </div>
+
+        <div class="form-group ">
+            <label>List Price (RS)</label>
+            <input type="number" id="listPrice" value="100" oninput="calculateNetPrice(); updatePreview();">
+        </div>
+
+        <div class="form-group">
+            <label>Discount Percentage (%)</label>
+            <input type="number" id="discount" value="0" oninput="calculateNetPrice()">
+        </div>
+
+        <div class="form-group">
+            <label>Net Price</label>
+            <input type="number" id="netPrice" value="100" oninput="updateDiscount()" step="0.01">
+        </div>
+
+        <div class="form-group">
+            <label>GST Rate (%)</label>
+            <input type="number" id="gstRate" value="0" oninput="calculateNetPrice()">
+        </div>
+
+        <div class="form-group">
+            <label>Shipping charges (if any)</label>
+            <input type="number" id="shippingcharges" value="0" oninput="updatePreview()">
+        </div>
+        <div class="form-group">
+            <label>Stock Level</label>
+            <input type="number" id="stockLevel" value="0" oninput="updatePreview()">
+        </div>
+        <div class="next-button-container">
+            <a href="step2.html" class="btn btn-secondary">Back</a>
+            <!-- <a href="step3.html" class="btn btn-primary" id="next-btn">Next</a> -->
+        </div>
+        
+    </div>
+
+    <div class="preview-container">
+       <div  id="largeImagePreviewContainer" >
+        <img src="https://via.placeholder.com/25x150" class="product-image" id="previewImage" alt="Preview Image">
+    </div> 
+        <!-- <img id="previewImage large-preview-container" class="product-image" src="https://via.placeholder.com/250x150" alt="Product"> -->
+       <br/>
+        <h3 id="previewName">Product Title</h3>
+        <p id="previewDesc" class="preview-description">Product description will appear here...</p>
+        <div class="price">
+            <span id="previewListPrice" class="text-muted">RS 100</span>
+            <span id="previewNetPrice">RS 100</span>
+        </div>
+        <!-- <div>Stock: <span id="previewStockLevel">0</span></div>
+        <div>Shipping Charges: <span id="previewShippingCharges">0</span></div> -->
+    </div>
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+
+    <script>
+        function updatePreview() {
+            document.getElementById("previewName").innerText = document.getElementById("productName").value || "Product Title";
+            document.getElementById("previewDesc").innerText = document.getElementById("productDesc").value || "Product description will appear here...";
+            document.getElementById("previewStockLevel").innerText = document.getElementById("stockLevel").value || "0";
+            document.getElementById("previewShippingCharges").innerText = document.getElementById("shippingcharges").value || "0";
+            document.getElementById("previewListPrice").innerText = "RS " + document.getElementById("listPrice").value;
+        }
+
+        function previewImages(event) {
+            let container = document.getElementById("imagePreviewContainer");
+            let largeContainer = document.getElementById("largeImagePreviewContainer");
+            let files = event.target.files;
+
+            if (files.length > 5) {
+                alert("You can only upload up to 5 images.");
+                event.target.value = "";
+                return;
+            }
+
+            container.innerHTML = "";
+            largeContainer.innerHTML = "";
+
+            for (let i = 0; i < files.length; i++) {
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    let img = document.createElement("img");
+                    img.src = e.target.result;
+                    img.classList.add("image-preview");
+                    container.appendChild(img);
+
+                    if (i === 0) {
+                        let largeImg = document.createElement("img");
+                        largeImg.src = e.target.result;
+                        largeContainer.appendChild(largeImg);
+                    }
+                };
+                reader.readAsDataURL(files[i]);
+            }
+        }
+        function calculateNetPrice() {
+    let price = parseFloat(document.getElementById("listPrice").value) || 0;
+    let discount = parseFloat(document.getElementById("discount").value) / 100 || 0;
+    let gstRate = parseFloat(document.getElementById("gstRate").value) || 0;
+    let gst = gstRate / 100; // Convert GST rate to decimal
+    let gstIncluded = document.getElementById("gstIncluded").checked;
+    
+    let netPrice = price - (price * discount); // Apply discount
+
+    if (gstIncluded) {
+        netPrice = netPrice / (1 + gst); // Remove GST if already included
+    } else {
+        netPrice = netPrice * (1 + gst); // Add GST if not included
+        
+
+    }
+
+    document.getElementById("netPrice").value = netPrice.toFixed(2);
+    document.getElementById("previewNetPrice").innerText = "RS " + netPrice.toFixed(2);
+}
+
+
+        function updateDiscount() {
+            let listPrice = parseFloat(document.getElementById("listPrice").value);
+            let netPrice = parseFloat(document.getElementById("netPrice").value);
+            let discount = ((listPrice - netPrice) / listPrice) * 100;
+
+            if (!isNaN(discount) && discount >= 0 && discount <= 100) {
+                document.getElementById("discount").value = discount.toFixed(2);
+            } else {
+                document.getElementById("discount").value = 0;
+            }
+
+            document.getElementById("previewNetPrice").innerText = "RS " + netPrice.toFixed(2);
+        }
+        function toggleSKU() {
+            document.getElementById("skuField").style.display = document.getElementById("hasSKU").checked ? "block" : "none";
+        }
+
+        function toggleHSN() {
+            document.getElementById("hsnField").style.display = document.getElementById("hasHSN").checked ? "block" : "none";
+        }
+        // Initialize Quill.js editor inside #editor-container
+var quill = new Quill('#editor-container', {
+    theme: 'snow'  // Snow theme provides toolbar options
+});
+
+// Function to update preview from Quill editor
+function updatePreview() {
+    document.getElementById("previewDesc").innerHTML = quill.root.innerHTML || "Product description will appear here...";
+}
+
+// Listen for changes in the Quill editor and update preview
+quill.on('text-change', function() {
+    updatePreview();
+});
+
+    </script>
+</body>
+</html>
