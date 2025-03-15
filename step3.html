@@ -9,7 +9,8 @@
         <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   
     <style>
            #editor-container {
             height: 200px;
@@ -22,25 +23,7 @@
             font-family: Arial, sans-serif;
             background-color: #f8f9fa;
         }
-        .form-container {
-            width: 50%;
-            padding: 20px;
-            background: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-height: 90vh;
-            overflow-y: auto;
-            border-radius: 8px;
-        }
-        .preview-container {
-            width: 40%;
-            position: sticky;
-            top: 20px;
-            background: white;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            border-radius: 8px;
-        }
+       
         .form-group {
             margin-bottom: 15px;
             display: flex;
@@ -108,12 +91,7 @@
             width: 100%;
         }
         
-        /* .next-button-container { 
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px; 
-            gap: 15px;
-        } */
+     
         .next-button-container { 
     display: flex;
     justify-content: flex-end; /* Aligns buttons to the right */
@@ -177,25 +155,171 @@
 .heading{
     font-weight: bold;
 }
+.form-container {
+            width: 50%;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 8px;
+        }
+        .preview-container {
+            width: 40%;
+            position: sticky;
+            margin-left: auto;
+            top: 20px;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-radius: 8px;
+            border-radius: 8px;
+        }
 
+        /* Responsive Font Sizes */
+h2, h3 {
+    font-weight: bold;
+}
+
+h2 {
+    font-size: 24px;
+}
+
+h3 {
+    font-size: 20px;
+}
+
+label {
+    font-size: 16px;
+}
+
+    /* RESPONSIVE DESIGN */
+
+/* Tablets (Portrait) */
+@media (max-width: 992px) {
+    .form-container, .preview-container {
+        max-width: 90%;
+    }
+    h2 {
+        font-size: 22px;
+    }
+
+    h3 {
+        font-size: 18px;
+    }
+
+    label {
+        font-size: 15px;
+    }
+}
+
+/* Mobile Phones */
+@media (max-width: 768px) {
+    body {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .form-container, .preview-container {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 15px;
+        padding: 15px;
+    }
+
+    .product-image {
+        max-height: 200px;
+    }
+
+    .image-preview-container img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .next-button-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .next-button-container a {
+        width: 100%;
+        text-align: center;
+    }
+    
+    h2 {
+        font-size: 20px;
+    }
+
+    h3 {
+        font-size: 17px;
+    }
+
+    label {
+        font-size: 14px;
+    }
+}
+
+/* Small Mobile Screens */
+@media (max-width: 480px) {
+    .form-group label {
+        font-size: 14px;
+    }
+
+    .product-image {
+        max-height: 150px;
+    }
+
+    .image-preview-container img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .price {
+        flex-direction: column;
+        align-items: center;
+    }
+    h2 {
+        font-size: 18px;
+    }
+
+    h3 {
+        font-size: 16px;
+    }
+
+    label {
+        font-size: 13px;
+    }
+
+    .form-group input, .form-group textarea {
+        font-size: 14px;
+    }
+
+    .btn-primary, .btn-secondary {
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+}
     </style>
 </head>
 <body>
 
-    <div class="form-container">
+    <div class="container">
+        <div class="row">
+    <div class=" col-lg-6 col-md-6 col-12 form-container">
         <h2 class="heading">Let's add your first product</h2>
         <br/>
         <h3>Basic Details</h3>
         <br/>
         <div class="form-group">
-            <label>Product Name</label>
-            <input type="text" id="productName" oninput="updatePreview()">
+            <label for="productName">Product Name</label>
+            <input type="text" id="productName" >
         </div>
 
         <div class="form-group">
             <label>Product Description</label>
             <div id="editor-container"></div>
-            <!-- <textarea id="productDesc" oninput="updatePreview()"></textarea> -->
+            
         </div>
 
         <div class="form-group">
@@ -228,24 +352,24 @@
             <input type="checkbox" id="gstIncluded" onchange="calculateNetPrice()"> <label for="gstIncluded">Price inclusive of GST</label>
         </div>
 
+      
+      
+        <div class="form-group">
+            <label  >Net Price</label>
+            <input type="" id="netPrice" value="0" oninput="updateDiscount()" >
+        </div>
         <div class="form-group ">
-            <label>List Price (RS)</label>
-            <input type="number" id="listPrice" value="100" oninput="calculateNetPrice(); updatePreview();">
+            <label for="listPrice">List Price </label>
+            <input type="number" id="listPrice" value="0" oninput="updateDiscount();">
         </div>
 
         <div class="form-group">
             <label>Discount Percentage (%)</label>
-            <input type="number" id="discount" value="0" oninput="calculateNetPrice()">
+            <input type="number" id="discount" placeholder="Enter the percentage" oninput="calculateNetPrice()">
         </div>
-
-        <div class="form-group">
-            <label>Net Price</label>
-            <input type="number" id="netPrice" value="100" oninput="updateDiscount()" step="0.01">
-        </div>
-
         <div class="form-group">
             <label>GST Rate (%)</label>
-            <input type="number" id="gstRate" value="0" oninput="calculateNetPrice()">
+            <input type="" id="gstRate" value="0" oninput="calculateNetPrice()">
         </div>
 
         <div class="form-group">
@@ -263,31 +387,42 @@
         
     </div>
 
-    <div class="preview-container">
+    <div class=" col-lg-6 col-md-6 col-12 preview-container">
        <div  id="largeImagePreviewContainer" >
         <img src="https://via.placeholder.com/25x150" class="product-image" id="previewImage" alt="Preview Image">
     </div> 
         <!-- <img id="previewImage large-preview-container" class="product-image" src="https://via.placeholder.com/250x150" alt="Product"> -->
        <br/>
-        <h3 id="previewName">Product Title</h3>
+        <h3 id="previewProductName">Product Title</h3>
         <p id="previewDesc" class="preview-description">Product description will appear here...</p>
         <div class="price">
             <span id="previewListPrice" class="text-muted">RS 100</span>
-            <span id="previewNetPrice">RS 100</span>
+            <span id="previewNetPrice" >RS 100</span>
+            
         </div>
         <!-- <div>Stock: <span id="previewStockLevel">0</span></div>
         <div>Shipping Charges: <span id="previewShippingCharges">0</span></div> -->
     </div>
+    </div>
+    </div>
+
     <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
 
     <script>
         function updatePreview() {
-            document.getElementById("previewName").innerText = document.getElementById("productName").value || "Product Title";
-            document.getElementById("previewDesc").innerText = document.getElementById("productDesc").value || "Product description will appear here...";
-            document.getElementById("previewStockLevel").innerText = document.getElementById("stockLevel").value || "0";
-            document.getElementById("previewShippingCharges").innerText = document.getElementById("shippingcharges").value || "0";
-            document.getElementById("previewListPrice").innerText = "RS " + document.getElementById("listPrice").value;
-        }
+         
+            // Get values from input fields
+            // let productName = document.getElementById("productName").value || "Product Title";
+            let listPrice = document.getElementById("listPrice").value || "0";
+        
+            // Update the preview elements
+            document.getElementById("previewName").innerText = productName;
+            document.getElementById("previewListPrice").innerText = "RS " + listPrice;
+        
+            // Ensure other details update as well
+            }
+        document.getElementById("productName").addEventListener("input", updatePreview);
+       
 
         function previewImages(event) {
             let container = document.getElementById("imagePreviewContainer");
@@ -321,6 +456,9 @@
             }
         }
         function calculateNetPrice() {
+            let listPrice = document.getElementById("listPrice").value || "0";
+       
+
     let price = parseFloat(document.getElementById("listPrice").value) || 0;
     let discount = parseFloat(document.getElementById("discount").value) / 100 || 0;
     let gstRate = parseFloat(document.getElementById("gstRate").value) || 0;
@@ -355,6 +493,7 @@
 
             document.getElementById("previewNetPrice").innerText = "RS " + netPrice.toFixed(2);
         }
+        
         function toggleSKU() {
             document.getElementById("skuField").style.display = document.getElementById("hasSKU").checked ? "block" : "none";
         }
@@ -376,6 +515,15 @@ function updatePreview() {
 quill.on('text-change', function() {
     updatePreview();
 });
+
+  function updatePreview1() {
+            let productName = $("#productName").val() || "Product title";
+          
+            $("#previewProductName").text(productName);
+          }
+
+        $("input").on("input", updatePreview1);
+        updatePreview1();
 
     </script>
 </body>
